@@ -9,12 +9,12 @@ namespace ProEventos.API.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class EventosController : ControllerBase
+    public class EventoController : ControllerBase
     {
-        private readonly IEventosService _eventosService;
-        public EventosController(IEventosService eventosService)
+        private readonly IEventoService _eventoService;
+        public EventoController(IEventoService eventoService)
         {
-            _eventosService = eventosService;
+            _eventoService = eventoService;
         }
 
         [HttpGet]
@@ -22,7 +22,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var eventos = await _eventosService.GetAllEventosAsync(true);
+                var eventos = await _eventoService.GetAllEventosAsync(true);
                 if (eventos == null) return NoContent();                
 
                 return Ok(eventos);
@@ -38,7 +38,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await _eventosService.GetEventoByIdAsync(id, true);
+                var evento = await _eventoService.GetEventoByIdAsync(id, true);
                 if (evento == null) return NoContent();
 
                 return Ok(evento);
@@ -54,7 +54,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var eventos = await _eventosService.GetAllEventosByTemaAsync(tema, true);
+                var eventos = await _eventoService.GetAllEventosByTemaAsync(tema, true);
                 if (eventos == null) return NoContent();
 
                 return Ok(eventos);
@@ -70,7 +70,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await _eventosService.AddEventos(model);
+                var evento = await _eventoService.AddEventos(model);
                 if (evento == null) return NoContent();
 
                 return Ok(evento);
@@ -86,7 +86,7 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await _eventosService.UpdateEvento(id, model);
+                var evento = await _eventoService.UpdateEvento(id, model);
                 if (evento == null) return NoContent();
 
                 return Ok(evento);
@@ -102,10 +102,10 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                var evento = await _eventosService.GetEventoByIdAsync(id, true);
+                var evento = await _eventoService.GetEventoByIdAsync(id, true);
                 if (evento == null) return NoContent();
 
-                return await _eventosService.DeleteEvento(id) ? Ok(new { message = "Deletado" }) : throw new Exception("Ocorreu um problema não especifico ao tentar deletar Evento.");
+                return await _eventoService.DeleteEvento(id) ? Ok(new { message = "Deletado" }) : throw new Exception("Ocorreu um problema não especifico ao tentar deletar Evento.");
             }
             catch (System.Exception ex)
             {
