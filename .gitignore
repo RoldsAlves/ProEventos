@@ -515,7 +515,6 @@ yarn-error.log
 testem.log
 /typings
 Resources/
-.vscode/
 # System files
 .DS_Store
 Thumbs.db
@@ -528,3 +527,5 @@ Thumbs.db
 #Files General
 .browserslistrc
 .editorconfig
+.vscode/
+.vscode/settings.json

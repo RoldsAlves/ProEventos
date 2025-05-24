@@ -7,12 +7,12 @@ using ProEventos.Application.Dtos;
 
 namespace ProEventos.Application.Contratos
 {
-    public interface IAccoutnService
+    public interface IAccountService
     {
         Task<bool> UserExist(string userName);
         Task<UserUpdateDto> GetUserByUserNameAsync(string userName);
         Task<SignInResult> CheckUserPasswordAsync(UserUpdateDto userUpdateDto, string password);
         Task<UserDto> CrateAccountAsync(UserDto userDto);
-        Task<UserUpdateDto> UdateAccount(UserUpdateDto userUpdateDto);
+        Task<UserUpdateDto> UpdateAccount(UserUpdateDto userUpdateDto);
     }
 }
