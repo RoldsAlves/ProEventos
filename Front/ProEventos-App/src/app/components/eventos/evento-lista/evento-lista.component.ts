@@ -6,6 +6,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Evento } from '@app/models/Evento';
 import { EventoService } from '@app/services/evento.service';
 import { environment } from '@environments/environment';
+import { Pagination, PaginatedResult } from '@app/models/Pagination';
 
 @Component({
   selector: 'app-evento-lista',
@@ -19,6 +20,7 @@ export class EventoListaComponent implements OnInit {
   public eventosFiltered: any = [];
   public eventoTema = "";
   public eventoId = 0;
+  public pagination = {} as Pagination;
 
   public widthImg: number = 100;
   public marginImg: number = 2;
@@ -52,8 +54,8 @@ export class EventoListaComponent implements OnInit {
   ) { }
 
   public ngOnInit(): void {
+    this.pagination = {currentPage: 1, itemsPerPage: 5, totalItems: 1} as Pagination;
     this.getEventos();
-    this.spinner.show();
   }
 
   public showImage(){
@@ -67,10 +69,12 @@ export class EventoListaComponent implements OnInit {
   }
 
   public getEventos(): void {
-    this.eventoService.getEventos().subscribe({
-      next: (_eventos: Evento[]) => {
-        this.eventos = _eventos;
+    this.spinner.show();
+    this.eventoService.getEventos(this.pagination.currentPage, this.pagination.itemsPerPage).subscribe({
+      next: (paginatedResult: PaginatedResult<Evento[]>) => {
+        this.eventos = paginatedResult.result;
         this.eventosFiltered = this.eventos;
+        this.pagination = paginatedResult.pagination;
       },
       error: (error: any) => {
         this.spinner.hide();
@@ -86,6 +90,8 @@ export class EventoListaComponent implements OnInit {
     this.eventoId = eventoId;
     this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
   }
+
+  public pageChanged($event): void {}
 
   confirm(): void {
     this.modalRef.hide();
