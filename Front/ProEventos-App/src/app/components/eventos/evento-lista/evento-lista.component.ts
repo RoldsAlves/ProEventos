@@ -7,6 +7,7 @@ import { Evento } from '@app/models/Evento';
 import { EventoService } from '@app/services/evento.service';
 import { environment } from '@environments/environment';
 import { Pagination, PaginatedResult } from '@app/models/Pagination';
+import { debounceTime, Subject } from 'rxjs';
 
 @Component({
   selector: 'app-evento-lista',
@@ -17,7 +18,6 @@ export class EventoListaComponent implements OnInit {
   modalRef!: BsModalRef;
 
   public eventos: Evento[] = [];
-  public eventosFiltered: any = [];
   public eventoTema = "";
   public eventoId = 0;
   public pagination = {} as Pagination;
@@ -25,24 +25,28 @@ export class EventoListaComponent implements OnInit {
   public widthImg: number = 100;
   public marginImg: number = 2;
   public showImg: boolean = false;
-  private _filterList: string = '';
 
-  public get filterList(): string {
-    return this._filterList;
-  }
+  termoBuscaChanged: Subject<string> = new Subject<string>();
 
-  public set filterList(value: string) {
-    this._filterList =  value;
-    this.eventosFiltered = this.filterList ? this.filterEventos(this.filterList) : this.eventos;
-  }
-
-  public filterEventos(filterBy: string): Evento[] {
-    filterBy = filterBy.toLocaleLowerCase();
-    return this.eventos.filter(
-      (evento: { tema: string; local: string; }) =>
-        evento.tema.toLocaleLowerCase().indexOf(filterBy) !== -1 ||
-        evento.local.toLocaleLowerCase().indexOf(filterBy) !== -1
-    );
+  public filterEventos(evt: any): void {
+    if(this.termoBuscaChanged.observers.length === 0){
+      this.termoBuscaChanged.pipe(debounceTime(1000)).subscribe(
+        filtrarPor => {
+          this.spinner.show();
+          this.eventoService.getEventos(this.pagination.currentPage,this.pagination.itemsPerPage, filtrarPor).subscribe(
+            (paginatedResult: PaginatedResult<Evento[]>) => {
+              this.eventos = paginatedResult.result;
+              this.pagination = paginatedResult.pagination;
+            },
+            (error: any) => {
+              this.spinner.hide();
+              this.toastr.error('Erro ao Carregar os Eventos.', 'Erro!')
+            },
+          ).add(() => this.spinner.hide(),
+        )}
+      );
+    }
+    this.termoBuscaChanged.next(evt.value);
   }
 
   constructor(
@@ -70,30 +74,31 @@ export class EventoListaComponent implements OnInit {
 
   public getEventos(): void {
     this.spinner.show();
-    this.eventoService.getEventos(this.pagination.currentPage, this.pagination.itemsPerPage).subscribe({
-      next: (paginatedResult: PaginatedResult<Evento[]>) => {
+    this.eventoService.getEventos(this.pagination.currentPage, this.pagination.itemsPerPage).subscribe(
+      (paginatedResult: PaginatedResult<Evento[]>) => {
         this.eventos = paginatedResult.result;
-        this.eventosFiltered = this.eventos;
         this.pagination = paginatedResult.pagination;
       },
-      error: (error: any) => {
+      (error: any) => {
         this.spinner.hide();
         this.toastr.error('Erro ao Carregar os Eventos.', 'Erro!')
       },
-      complete: () => this.spinner.hide()
-    });
+    ).add(() => this.spinner.hide());
   }
 
-  openModal(event: any, template: TemplateRef<any>, eventoId: number, eventoTema: string): void {
+  public openModal(event: any, template: TemplateRef<any>, eventoId: number, eventoTema: string): void {
     event?.stopPropagation();
     this.eventoTema = eventoTema;
     this.eventoId = eventoId;
     this.modalRef = this.modalService.show(template, {class: 'modal-sm'});
   }
 
-  public pageChanged($event): void {}
+  public pageChanged(event): void {
+    this.pagination.currentPage = event.page;
+    this.getEventos();
+  }
 
-  confirm(): void {
+  public confirm(): void {
     this.modalRef.hide();
     this.spinner.show();
 
@@ -111,11 +116,11 @@ export class EventoListaComponent implements OnInit {
 
   }
 
-  decline(): void {
+  public decline(): void {
     this.modalRef.hide();
   }
 
-  detalheEvento(id: number): void {
+  public detalheEvento(id: number): void {
     this.router.navigate([`eventos/detalhe/${id}`])
   }
 }
