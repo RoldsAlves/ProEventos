@@ -43,7 +43,7 @@ namespace ProEventos.Persistence
 
             return await query.ToArrayAsync();
         }
-        public async Task<RedeSocial[]> GetAllByPalestranteIDAsync(int palestranteId){
+        public async Task<RedeSocial[]> GetAllByPalestranteIdAsync(int palestranteId){
             IQueryable<RedeSocial> query = _context.RedesSociais;
 
             query = query.AsNoTracking()

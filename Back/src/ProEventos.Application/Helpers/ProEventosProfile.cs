@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using AutoMapper;
 using ProEventos.Application.Dtos;
 using ProEventos.Domain;
 using ProEventos.Domain.Identity;
-using ProEventos.Persistence.Models;
 
 namespace ProEventos.Application.Helpers
 {

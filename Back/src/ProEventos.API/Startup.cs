@@ -17,6 +17,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using ProEventos.Application;
 using ProEventos.Application.Contratos;
+using ProEventos.Application.Helpers;
 using ProEventos.Domain.Identity;
 using ProEventos.Persistence;
 using ProEventos.Persistence.Context;
@@ -40,7 +41,7 @@ namespace ProEventos.API
             services.AddControllers()
                     .AddJsonOptions(op => op.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()))
                     .AddNewtonsoftJson(x => x.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
-            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+            services.AddAutoMapper(typeof(ProEventosProfile));
             services.AddIdentityCore<User>(op =>
                     {
                         op.Password.RequireDigit = false;
