@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ProEventos.API.Extensions;
+using ProEventos.API.Helpers;
 using ProEventos.Application.Contratos;
 using ProEventos.Application.Dtos;
 using ProEventos.Persistence.Models;
@@ -19,13 +20,14 @@ namespace ProEventos.API.Controllers
     public class EventoController : ControllerBase
     {
         private readonly IEventoService _eventoService;
-        private readonly IWebHostEnvironment _hostEnvironment;
+        private readonly IUtil _util;
         private readonly IAccountService _accountService;
+        private readonly string _destino = "Images";
 
-        public EventoController(IEventoService eventoService, IWebHostEnvironment hostEnvironment, IAccountService accountService)
+        public EventoController(IEventoService eventoService, IUtil util, IAccountService accountService)
         {
             _eventoService = eventoService;
-            _hostEnvironment = hostEnvironment;
+            _util = util;
             _accountService = accountService;
         }
 
@@ -90,8 +92,8 @@ namespace ProEventos.API.Controllers
                 var file = Request.Form.Files[0];
                 if (file.Length > 0)
                 {
-                    DeleteImage(evento.ImagemURL);
-                    evento.ImagemURL = await SaveImage(file);
+                    _util.DeleteImage(evento.ImagemURL, _destino);
+                    evento.ImagemURL = await _util.SaveImage(file, _destino);
                 }
 
                 var eventoRetorno = await _eventoService.UpdateEvento(User.GetUserId(), eventoId, evento);
@@ -100,7 +102,7 @@ namespace ProEventos.API.Controllers
             }
             catch (System.Exception ex)
             {
-                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar adicionar evento. Erro: {ex.Message}");
+                return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar realizar upload de foto do Evento. Erro: {ex.Message}");
             }
         }
 
@@ -130,7 +132,7 @@ namespace ProEventos.API.Controllers
 
                 if (await _eventoService.DeleteEvento(User.GetUserId(), id))
                 {
-                    DeleteImage(evento.ImagemURL);
+                    _util.DeleteImage(evento.ImagemURL, _destino);
                     return Ok(new { message = "Deletado" });
                 }
                 else
@@ -141,33 +143,6 @@ namespace ProEventos.API.Controllers
             catch (System.Exception ex)
             {
                 return this.StatusCode(StatusCodes.Status500InternalServerError, $"Erro ao tentar deletar evento. Erro: {ex.Message}");
-            }
-        }
-
-        [NonAction]
-        private async Task<string> SaveImage(IFormFile imageFile)
-        {
-            string imageName = new String(Path.GetFileNameWithoutExtension(imageFile.FileName).Take(10).ToArray()).Replace(' ', '-'); //Pega apenas o 10 primeiros caracteres do nome do arquivo
-            imageName = $"{imageName}{DateTime.UtcNow.ToString("yymmssfff")}{Path.GetExtension(imageFile.FileName)}"; // combina o nome do arquivo com data/hora atual e extensão do arquivo
-
-            var imagePath =Path.Combine(_hostEnvironment.ContentRootPath, @"Resources/images", imageName); //Diretorio onde será salvo o arquivo
-
-            using (var fileStream = new FileStream(imagePath, FileMode.Create))
-            {
-                await imageFile.CopyToAsync(fileStream); //salva a imagem no diretorio
-            }
-
-            return imageName;
-        }
-
-        //Deletar imagem existente no diretorio atrelado ao evento.
-        [NonAction]
-        private void DeleteImage(string imagemURL)
-        {
-            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @"Resources/Images", imagemURL); //Diretorio onde está salvo o arquivo
-            if (System.IO.File.Exists(imagePath))
-            {
-                System.IO.File.Delete(imagePath);
             }
         }
     }

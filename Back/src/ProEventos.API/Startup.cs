@@ -15,6 +15,7 @@ using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using ProEventos.API.Helpers;
 using ProEventos.Application;
 using ProEventos.Application.Contratos;
 using ProEventos.Application.Helpers;
@@ -69,6 +70,8 @@ namespace ProEventos.API
                         };
                     });
 
+            services.AddScoped<IUtil, Util>();
+            
             services.AddScoped<IEventoService, EventoService>();
             services.AddScoped<ILoteService, LoteService>();
             services.AddScoped<ITokenService, TokenService>();

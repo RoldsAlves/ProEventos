@@ -3,7 +3,7 @@ namespace ProEventos.Domain.Enum
     public enum Titulo
     {
         NaoInformado,
-        Tencologo,
+        Tecnologo,
         Bacharel,
         Especialista,
         PosGraduado,
