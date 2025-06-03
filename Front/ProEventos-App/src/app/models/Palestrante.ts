@@ -4,7 +4,7 @@ import { RedeSocial } from "./RedeSocial";
 export interface Palestrante {
   id: number;
   nome: string;
-  mninCurriculo: string;
+  mininCurriculo: string;
   imagemURL: string;
   telefone: string;
   email: string;

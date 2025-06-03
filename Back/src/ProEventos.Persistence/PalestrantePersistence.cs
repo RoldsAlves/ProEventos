@@ -30,10 +30,10 @@ namespace ProEventos.Persistence
             }
 
             query = query.AsNoTracking()
-                         .Where(p => (p.MninCurriculo.ToLower().Contains(pageParams.Term.ToLower()) ||
+                         .Where(p => (p.MiniCurriculo.ToLower().Contains(pageParams.Term.ToLower()) ||
                                      p.User.FirstName.ToLower().Contains(pageParams.Term.ToLower()) || 
                                      p.User.LastName.ToLower().Contains(pageParams.Term.ToLower())) &&
-                                     p.User.UserFuction == Domain.Enum.Funcao.Palestrante)
+                                     p.User.UserFunction == Domain.Enum.Funcao.Palestrante)
                          .OrderBy(p => p.Id);
 
             return await PageList<Palestrante>.CreateAsync(query, pageParams.PageNumber, pageParams.pageSize);

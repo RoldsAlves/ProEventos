@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ProEventos.Persistence.Context;
 
@@ -10,9 +11,11 @@ using ProEventos.Persistence.Context;
 namespace ProEventos.Persistence.Migrations
 {
     [DbContext(typeof(ProEventosContext))]
-    partial class ProEventosContextModelSnapshot : ModelSnapshot
+    [Migration("20250603164306_UpdatePalestrante")]
+    partial class UpdatePalestrante
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.16");
@@ -229,7 +232,7 @@ namespace ProEventos.Persistence.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("UserFunction")
+                    b.Property<int>("UserFuction")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("UserName")
@@ -300,7 +303,7 @@ namespace ProEventos.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("MiniCurriculo")
+                    b.Property<string>("MininCurriculo")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("UserId")
