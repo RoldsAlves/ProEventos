@@ -35,10 +35,13 @@ namespace ProEventos.API.Helpers
         //Deletar imagem existente no diretorio atrelado ao evento.
         public void DeleteImage(string imageName, string destino)
         {
-            var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @$"Resources/{destino}", imageName); //Diretorio onde está salvo o arquivo
-            if (System.IO.File.Exists(imagePath))
+            if (!string.IsNullOrEmpty(imageName))
             {
-                System.IO.File.Delete(imagePath);
+                var imagePath = Path.Combine(_hostEnvironment.ContentRootPath, @$"Resources/{destino}", imageName); //Diretorio onde está salvo o arquivo
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }           
             }
         }
     }

@@ -4,14 +4,15 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http'
 
+import { CollapseModule } from 'ngx-bootstrap/collapse';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'
 import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
-import { CollapseModule } from 'ngx-bootstrap/collapse';
+import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
-import { TooltipModule } from 'ngx-bootstrap/tooltip';
-import { defineLocale } from 'ngx-bootstrap/chronos';
 import { ptBrLocale } from 'ngx-bootstrap/locale';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
 import { NgxCurrencyModule } from 'ngx-currency';
 import { NgxSpinnerModule } from 'ngx-spinner';
@@ -42,6 +43,7 @@ import { LoteService } from './services/lote.service';
 
 import { NavComponent } from './shared/nav/nav.component';
 import { TituloComponent } from './shared/titulo/titulo.component';
+import { PerfilDetalheComponent } from './components/user/perfil/perfil-detalhe/perfil-detalhe.component';
 
 defineLocale('pt-br', ptBrLocale);
 
@@ -54,6 +56,7 @@ defineLocale('pt-br', ptBrLocale);
     ContatosComponent,
     DashboardComponent,
     PerfilComponent,
+    PerfilDetalheComponent,
     NavComponent,
     DateTimeFormatPipe,
     EventoDetalheComponent,
@@ -77,6 +80,7 @@ defineLocale('pt-br', ptBrLocale);
     NgxCurrencyModule,
     ReactiveFormsModule,
     PaginationModule.forRoot(),
+    TabsModule.forRoot(),
     ToastrModule.forRoot({
       timeOut: 3000,
       positionClass: 'toast-bottom-right',
