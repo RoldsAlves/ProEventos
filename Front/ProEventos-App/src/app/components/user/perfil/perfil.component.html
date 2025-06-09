@@ -1,4 +1,4 @@
-<app-titulo [titulo]="'Perfil'" [iconClass]="'fa-regular fa-address-card'"></app-titulo>
+<app-titulo [titulo]="'Perfil' + (isPalestrante ? ' Palestrante' : '')" [iconClass]="'fa-regular fa-address-card'"></app-titulo>
 <div class="card rouded shadow-sm">
   <div class="row p-3">
     <div class="col-lg-3 pt-1">
@@ -25,7 +25,7 @@
               </div>
               <div class="col-6 text-center">
                 <div class="h5">0</div>
-                <div class="h6 text-muted">Eventos como Participante</div>
+                <div class="h6 text-muted">Eventos como {{isPalestrante ? ' Palestrante' : ' Participante'}}</div>
               </div>
             </div>
           </li>
@@ -45,13 +45,19 @@
           <ng-template tabHeading>
             <i class="fa fa-user mr-2"></i><span>Palestrante</span>
           </ng-template>
-          <!-- <app-perfil-detalhe></app-perfil-detalhe> -->
+          <div class="form-group">
+            <h3 class="border-bottom">Palestrante</h3>
+          </div>
+          <app-palestrante-detalhe></app-palestrante-detalhe>
         </tab>
         <tab *ngIf="isPalestrante" class="border border-top-0 p-3">
           <ng-template tabHeading>
             <i class="fa-solid fa-at mr-2"></i><span>Rede Social</span>
           </ng-template>
-          <!-- <app-perfil-detalhe></app-perfil-detalhe> -->
+          <div class="form-group">
+            <h3 class="border-bottom">Rede Social</h3>
+          </div>
+          <app-redesSociais></app-redesSociais>
         </tab>
       </tabset>
     </div>      

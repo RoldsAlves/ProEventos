@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { ValidatorsField } from '@app/helpers/ValidatorsField';
 import { UserUpdate } from '@app/models/Identity/UserUpdate';
 import { AccountService } from '@app/services/account.service';
+import { PalestranteService } from '@app/services/palestrante.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { ToastrService } from 'ngx-toastr';
 
@@ -24,6 +25,7 @@ export class PerfilDetalheComponent implements OnInit {
 
   constructor(public fb: FormBuilder,
               public accountService: AccountService,
+              public palestranteService: PalestranteService,
               private router: Router,
               private toastr: ToastrService,
               private spinner: NgxSpinnerService,
@@ -86,6 +88,16 @@ export class PerfilDetalheComponent implements OnInit {
   public atualizarUsuario() {
     this.userUpdate = { ...this.form.value }
     this.spinner.show();
+
+    if(this.f.userFunction.value == 'Palestrante'){
+      this.palestranteService.post().subscribe(
+        () => this.toastr.success('Função Palestrante ativada', 'Sucesso!'),
+        (error) => {
+          this.toastr.error('A função Palestrante não pode ser ativada', 'Error');
+          console.error(error);
+        }
+      );
+    }
 
     this.accountService.updateUser(this.userUpdate).subscribe(
       () => this.toastr.success('Usuário atualizado!', 'Sucesso'),
